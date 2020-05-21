@@ -1,0 +1,23 @@
+:root {
+ margin: 0;
+ border: 0;
+ font-family: Avenir, sans-serif;
+}
+
+#gameTitle,
+#scoreTitle {
+ color: rgb(100, 100, 100);
+}
+
+.grid {
+ display: flex;
+ flex-wrap: wrap;
+ height: 480px;
+ width: 480px;
+ background: rgb(200, 200, 200)
+}
+
+/* .card {
+ width: 120px;
+ height: 120px;
+} */
