@@ -69,11 +69,15 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   const grid = document.querySelector(".grid");
-  const chosenCardArray = [];
-  const cardsWon = [];
+  const cardsWonArray = [];
+  let chosenCardArray = [];
+  let chosenCardKeyArray = [];
+  let flips = 0;
 
-  // create board
+  cardArray.sort;
+
   function createBoard() {
+    cardArray.sort(() => 0.5 - Math.random());
     for (let i = 0; i < cardArray.length; i++) {
       let card = document.createElement("img");
       card.setAttribute("src", "images/light.png");
@@ -84,30 +88,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // flipcard
-  /*
-  When clicked, get id of card clicked. This is to keep track of which cards were matched (when they are matched).
-  Use card id to get card from cardArray.
-  Display card image to card in cardArray.
-  Push card to chosenCardArray
-  if chosenCardArray.length>1, checkMatch()
-  
-
-  */
   function flipCard() {
-    let cardKey = this.getAttribute("key");
-    this.setAttribute("src", cardArray[cardKey].image);
-    chosenCardArray.push(cardArray[cardKey]);
+    if (this.getAttribute("src") != "images/dark.png") {
+      // flips card if it's not a dark card
+
+      let key = this.getAttribute("key");
+      this.setAttribute("src", cardArray[key].image);
+      chosenCardArray.push(cardArray[key].name);
+      // keeps track of chosen card name for match comparison
+
+      chosenCardKeyArray.push(this.getAttribute("key"));
+      // keeps track of card key for flipping cards to light or dark.png
+
+      if (chosenCardArray.length === 2) {
+        setTimeout(checkMatch, 500);
+        // gives a little delay before actually running checkMatch
+      }
+
+      flips++;
+      document.getElementById("steps").textContent = flips;
+    }
   }
 
-  // check match
-  /*
-  if chosenCardArray.length === 2, check if the name of both cards are the same.
-  If yes, it's a match. so add one of the cards to cardsWon (this will be the score tally). 
-  reset chosenCardArray to zero
-  
-  */
-  function checkMatch() {}
+  function checkMatch() {
+    const cards = document.querySelectorAll("img");
+    // stores an instance of all the cards in this function
+    if (chosenCardArray[0] === chosenCardArray[1]) {
+      cardsWonArray.push(chosenCardArray[0]);
+      // keeps track on which cards are matched for score tabulation
+      cards[chosenCardKeyArray[0]].setAttribute("src", "images/dark.png");
+      cards[chosenCardKeyArray[1]].setAttribute("src", "images/dark.png");
+      // changes cards to dark
+    } else {
+      cards[chosenCardKeyArray[0]].setAttribute("src", "images/light.png");
+      cards[chosenCardKeyArray[1]].setAttribute("src", "images/light.png");
+      // changes cards to light
+    }
+    chosenCardArray = [];
+    chosenCardKeyArray = [];
+    // resets utility cards arrays
+    document.getElementById("result").textContent = cardsWonArray.length;
+    // upcates score
+
+    if (cardsWonArray.length === cardArray.length / 2) {
+      let congrats = document.getElementById("congrats");
+      congrats.textContent = "Congratulations! You've found them all!";
+    }
+  }
 
   createBoard();
 });
